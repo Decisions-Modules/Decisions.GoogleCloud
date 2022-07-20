@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using Decisions.GoogleCloud.Data;
 using DecisionsFramework.ServiceLayer;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Bigquery.v2.Data;
@@ -19,6 +21,11 @@ namespace Decisions.GoogleCloud
             BigQueryClient client;
             if (settings.UseJsonFile)
             {
+                if (string.IsNullOrEmpty(settings.CredentialsJsonPath))
+                {
+                    throw new ArgumentNullException(nameof(settings.CredentialsJsonPath), ErrorStringConstants.JsonPathNotConfigured);
+                }
+                
                 // Authentication uses Json File to log in service account.
                 var contents = File.ReadAllText(settings.CredentialsJsonPath);
                 credential = GoogleCredential.FromJson(contents);
@@ -69,5 +76,6 @@ namespace Decisions.GoogleCloud
 
             return returnRows.ToArray();
         }
+        
     }
 }

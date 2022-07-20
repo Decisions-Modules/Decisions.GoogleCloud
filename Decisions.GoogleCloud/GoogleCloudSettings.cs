@@ -1,4 +1,7 @@
-﻿using DecisionsFramework.Data.ORMapper;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using DecisionsFramework;
+using DecisionsFramework.Data.ORMapper;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
 using DecisionsFramework.ServiceLayer.Actions;
@@ -10,12 +13,25 @@ using DecisionsFramework.ServiceLayer.Utilities;
 
 namespace Decisions.GoogleCloud
 {
-    public class GoogleCloudSettings : AbstractModuleSettings, IInitializable
+    public class GoogleCloudSettings : AbstractModuleSettings, IInitializable, INotifyPropertyChanged, IValidationSource
     {
-    
-        [ORMField]
+
+        [ORMField] 
+        private bool useJsonFile = true;
+
         [PropertyClassification(0, "Use JSON File", "Credentials")]
-        public bool UseJsonFile { get; set; }
+        public bool UseJsonFile
+        {
+            get
+            {
+                return useJsonFile;
+            }
+            set
+            {
+                useJsonFile = value;
+                OnPropertyChanged(nameof(UseJsonFile));
+            }
+        }
 
         [ORMField]
         [PropertyHiddenByValue(nameof(UseJsonFile), false, true)]
@@ -46,6 +62,26 @@ namespace Decisions.GoogleCloud
                 };
 
             return new BaseActionType[0];
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public ValidationIssue[] GetValidationIssues()
+        {
+            List<ValidationIssue> issues = new List<ValidationIssue>();
+
+            if (useJsonFile && string.IsNullOrEmpty(CredentialsJsonPath))
+            {
+                issues.Add(new ValidationIssue(CredentialsJsonPath, "JSON Path cannot be empty."));
+
+            }
+
+            return issues.ToArray();
         }
     }
 }
