@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Decisions.GoogleCloud.Data;
 using DecisionsFramework.Design.Flow.CoreSteps.StandardSteps;
 using DecisionsFramework.ServiceLayer;
@@ -22,13 +23,18 @@ namespace Decisions.GoogleCloud
             BigQueryClient client;
             if (settings.UseJsonFile)
             {
-                if (string.IsNullOrEmpty(settings.CredentialsJsonPath))
+                if (settings.CredentialsJson == null || settings.CredentialsJson.Contents == null || settings.CredentialsJson.Contents.Length == 0)
                 {
-                    throw new ArgumentNullException(nameof(settings.CredentialsJsonPath), ErrorStringConstants.JsonPathNotConfigured);
+                    throw new ArgumentNullException(nameof(settings.CredentialsJson), ErrorStringConstants.JsonNotConfigured);
                 }
                 
                 // Authentication uses Json File to log in service account.
-                var contents = File.ReadAllText(settings.CredentialsJsonPath);
+                var contents = Encoding.UTF8.GetString(settings.CredentialsJson.Contents, 0, settings.CredentialsJson.Contents.Length);
+                if (string.IsNullOrEmpty(contents))
+                {
+                    throw new ArgumentNullException(nameof(settings.CredentialsJson),
+                        ErrorStringConstants.JsonNotConfigured);
+                }
                 credential = GoogleCredential.FromJson(contents);
                 client = BigQueryClient.Create(projectId, credential);
             }
@@ -54,8 +60,10 @@ namespace Decisions.GoogleCloud
                 queryOptions = new() { UseLegacySql = useLegacySql };
             }
 
+            // Execute the query
             BigQueryResults results = client.ExecuteQuery(query, null, queryOptions ?? new());
 
+            // Build output columns and rows
             DataTable dataTable = new DataTable("Query Result");
             List<string> columnNames = new();
             List<DynamicDataRow> returnRows = new();

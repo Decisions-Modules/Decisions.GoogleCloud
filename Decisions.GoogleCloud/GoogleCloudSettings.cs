@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using DecisionsFramework;
+using DecisionsFramework.Data.DataTypes;
 using DecisionsFramework.Data.ORMapper;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
@@ -15,10 +17,10 @@ namespace Decisions.GoogleCloud
 {
     public class GoogleCloudSettings : AbstractModuleSettings, IInitializable, INotifyPropertyChanged, IValidationSource
     {
-
         [ORMField] 
         private bool useJsonFile = true;
-
+        
+        [DataMember]
         [PropertyClassification(0, "Use JSON File", "Credentials")]
         public bool UseJsonFile
         {
@@ -33,11 +35,21 @@ namespace Decisions.GoogleCloud
             }
         }
 
-        [ORMField]
+        private FileData credentialsJson;
+
+        [DataMember]
         [PropertyHiddenByValue(nameof(UseJsonFile), false, true)]
-        [PropertyClassification(1, "JSON File Path", "Credentials")]
-        public string CredentialsJsonPath { get; set; }
-        
+        [PropertyClassification(1, "JSON File", "Credentials")]
+        public FileData CredentialsJson
+        {
+            get { return credentialsJson; }
+            set
+            {
+                credentialsJson = value;
+                OnPropertyChanged(nameof(CredentialsJson));
+            }
+        }
+
         public void Initialize()
         {
             // Read the Settings here
@@ -75,9 +87,9 @@ namespace Decisions.GoogleCloud
         {
             List<ValidationIssue> issues = new List<ValidationIssue>();
 
-            if (useJsonFile && string.IsNullOrEmpty(CredentialsJsonPath))
+            if (useJsonFile && CredentialsJson == null)
             {
-                issues.Add(new ValidationIssue(CredentialsJsonPath, "JSON Path cannot be empty."));
+                issues.Add(new ValidationIssue(nameof(CredentialsJson), "JSON Path cannot be empty."));
 
             }
 
