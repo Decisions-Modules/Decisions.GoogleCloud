@@ -1,0 +1,26 @@
+﻿*.user
+*.userosscache
+*.sln.ide
+*.ps1.log
+*.zip
+*.ps1.error
+.vs/*
+Module.Modified.xml
+
+# Build results
+**/[Dd]ebug/
+**/[Dd]ebugPublic/
+**/[Rr]elease/
+**/[Rr]eleases/
+**/x64/
+**/x86/
+**/build/
+**/bld/
+**/[Bb]in/
+**/[Oo]bj/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+.idea/

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<CreateModuleInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Resources NoComponents="true">
+		<CoreServicesDlls>
+			<string>.\Decisions.GoogleCloud\obj\Debug\net6.0\win-x64\Decisions.GoogleCloud.dll</string>
+		</CoreServicesDlls>
+		<ReferenceDlls>
+			<string>.\Decisions.GoogleCloud\obj\Google.Cloud.BigQuery.V2.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Bigquery.v2.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Api.Gax.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Api.Gax.Rest.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Auth.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Auth.PlatformServices.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Core.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Apis.dll</string>
+		</ReferenceDlls>
+		<CliDlls/>
+		<WebPages/>
+		<SilverlightDlls />	
+		<AgentDlls />
+		<InstallScript />		
+		<SqlScripts />
+		<ObjectsToImport />     	
+		<MsSqlScript />
+	</Resources>
+	<Version>8.2.0</Version>
+	 <ImagePath>./image.png</ImagePath>
+	<Description>Google Cloud Integration</Description>
+</CreateModuleInfo>
