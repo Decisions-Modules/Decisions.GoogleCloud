@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using DecisionsFramework.Design.Flow;
+using DecisionsFramework.Design.Flow.CoreSteps.StandardSteps;
 
 namespace Decisions.GoogleCloud.BigQuery
 {
@@ -14,7 +15,7 @@ namespace Decisions.GoogleCloud.BigQuery
         /// <param name="projectId">BigQuery Project Id.</param>
         /// <param name="query">The SQL query to execute.</param>
         /// <returns></returns>
-        public DataRow[] RawSqlQuery(string projectId, string query)
+        public DynamicDataRow[] RawSqlQuery(string projectId, string query)
         {
             // Required parameters
             if (string.IsNullOrEmpty(projectId))
@@ -31,7 +32,7 @@ namespace Decisions.GoogleCloud.BigQuery
         /// <param name="projectId">BigQuery Project Id.</param>
         /// <param name="query">The SQL query to execute.</param>
         /// <returns></returns>
-        public DataRow[] RawLegacySqlQuery(string projectId, string query)
+        public DynamicDataRow[] RawLegacySqlQuery(string projectId, string query)
         {
             // Required parameters
             if (string.IsNullOrEmpty(projectId))

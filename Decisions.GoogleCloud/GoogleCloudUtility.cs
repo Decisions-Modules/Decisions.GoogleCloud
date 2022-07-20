@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using Decisions.GoogleCloud.Data;
+using DecisionsFramework.Design.Flow.CoreSteps.StandardSteps;
 using DecisionsFramework.ServiceLayer;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Bigquery.v2.Data;
@@ -40,7 +41,7 @@ namespace Decisions.GoogleCloud
             return client;
         }
 
-        public static DataRow[] RunQueryWithReturn(string projectId, string query, bool useLegacySql = false)
+        public static DynamicDataRow[] RunQueryWithReturn(string projectId, string query, bool useLegacySql = false)
         {
             
             // Execute Query
@@ -57,7 +58,7 @@ namespace Decisions.GoogleCloud
 
             DataTable dataTable = new DataTable("Query Result");
             List<string> columnNames = new();
-            List<DataRow> returnRows = new();
+            List<DynamicDataRow> returnRows = new();
             foreach (BigQueryRow result in results)
             {
                 DataRow newRow = dataTable.NewRow();
@@ -71,7 +72,7 @@ namespace Decisions.GoogleCloud
                     
                     newRow[r.Name] = result[r.Name];
                 }
-                returnRows.Add(newRow);
+                returnRows.Add(new DynamicDataRow(newRow));
             }
 
             return returnRows.ToArray();
