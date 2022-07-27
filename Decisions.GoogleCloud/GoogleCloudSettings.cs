@@ -15,10 +15,27 @@ using DecisionsFramework.ServiceLayer.Utilities;
 
 namespace Decisions.GoogleCloud
 {
+    [ORMEntity("cloud_settings")]
+    [DataContract]
+    [ValidationRules]
     public class GoogleCloudSettings : AbstractModuleSettings, IInitializable, INotifyPropertyChanged, IValidationSource
     {
+        public GoogleCloudSettings()
+        {
+            EntityName = "Google Cloud Settings";
+        }
+
+        public sealed override string EntityName
+        {
+            get => base.EntityName;
+            set => base.EntityName = value;
+        }
+
         [ORMField] 
         private bool useJsonFile = true;
+        
+        [ORMField(typeof(ORMBinaryFieldConverter))]
+        private FileData credentialsJson;
         
         [DataMember]
         [PropertyClassification(0, "Use JSON File", "Credentials")]
@@ -34,9 +51,7 @@ namespace Decisions.GoogleCloud
                 OnPropertyChanged(nameof(UseJsonFile));
             }
         }
-
-        private FileData credentialsJson;
-
+        
         [DataMember]
         [PropertyHiddenByValue(nameof(UseJsonFile), false, true)]
         [PropertyClassification(1, "JSON File", "Credentials")]
@@ -79,8 +94,7 @@ namespace Decisions.GoogleCloud
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public ValidationIssue[] GetValidationIssues()

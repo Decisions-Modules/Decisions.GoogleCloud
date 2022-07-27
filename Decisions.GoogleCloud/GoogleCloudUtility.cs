@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Decisions.GoogleCloud.Data;
@@ -19,7 +18,6 @@ namespace Decisions.GoogleCloud
         {
             var settings = ModuleSettingsAccessor<GoogleCloudSettings>.GetSettings();
 
-            GoogleCredential credential;
             BigQueryClient client;
             if (settings.UseJsonFile)
             {
@@ -35,7 +33,7 @@ namespace Decisions.GoogleCloud
                     throw new ArgumentNullException(nameof(settings.CredentialsJson),
                         ErrorStringConstants.JsonNotConfigured);
                 }
-                credential = GoogleCredential.FromJson(contents);
+                GoogleCredential credential = GoogleCredential.FromJson(contents);
                 client = BigQueryClient.Create(projectId, credential);
             }
             else
