@@ -15,7 +15,7 @@ using DecisionsFramework.ServiceLayer.Utilities;
 
 namespace Decisions.GoogleCloud
 {
-    [ORMEntity("cloud_settings")]
+    [ORMEntity("gcloud_settings")]
     [DataContract]
     [ValidationRules]
     public class GoogleCloudSettings : AbstractModuleSettings, IInitializable, INotifyPropertyChanged, IValidationSource
