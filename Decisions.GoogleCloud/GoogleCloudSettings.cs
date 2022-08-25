@@ -75,14 +75,14 @@ namespace Decisions.GoogleCloud
                                    userAccount.GetUserRights<PortalAdministratorModuleRight>() != null ||
                                    userAccount.IsAdministrator();
 
-            BaseActionType[] actions = { };
+            List<BaseActionType> actions = new List<BaseActionType>();
 
             if (canAdministrate)
             {
                 actions.Add(new EditEntityAction(GetType(), "Edit", null));
             }
             
-            return actions;
+            return actions.ToArray();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
