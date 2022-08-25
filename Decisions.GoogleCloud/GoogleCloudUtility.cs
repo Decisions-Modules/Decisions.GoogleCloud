@@ -14,23 +14,23 @@ namespace Decisions.GoogleCloud
 {
     public static class GoogleCloudUtility
     {
-        public static BigQueryClient GetBigQueryClient(string projectId)
+        public static BigQueryClient GetBigQueryClient(string projectId, CredentialsJson credentialsJson)
         {
             var settings = ModuleSettingsAccessor<GoogleCloudSettings>.GetSettings();
 
             BigQueryClient client;
             if (settings.UseJsonFile)
             {
-                if (settings.CredentialsJson == null || settings.CredentialsJson.Contents == null || settings.CredentialsJson.Contents.Length == 0)
+                if (credentialsJson == null || credentialsJson.JsonFile.Contents == null || credentialsJson.JsonFile.Contents.Length == 0)
                 {
-                    throw new ArgumentNullException(nameof(settings.CredentialsJson), ErrorStringConstants.JsonNotConfigured);
+                    throw new ArgumentNullException(nameof(CredentialsJson), ErrorStringConstants.JsonNotConfigured);
                 }
                 
                 // Authentication uses Json File to log in service account.
-                var contents = Encoding.UTF8.GetString(settings.CredentialsJson.Contents, 0, settings.CredentialsJson.Contents.Length);
+                var contents = Encoding.UTF8.GetString(credentialsJson.JsonFile.Contents, 0, credentialsJson.JsonFile.Contents.Length);
                 if (string.IsNullOrEmpty(contents))
                 {
-                    throw new ArgumentNullException(nameof(settings.CredentialsJson),
+                    throw new ArgumentNullException(nameof(CredentialsJson),
                         ErrorStringConstants.JsonNotConfigured);
                 }
                 GoogleCredential credential = GoogleCredential.FromJson(contents);
@@ -45,11 +45,14 @@ namespace Decisions.GoogleCloud
             return client;
         }
 
-        public static DynamicDataRow[] RunQueryWithReturn(string projectId, string query, bool useLegacySql = false)
+        public static DynamicDataRow[] RunQueryWithReturn(
+            string projectId, 
+            string query, 
+            CredentialsJson credentialsJson, 
+            bool useLegacySql = false)
         {
-            
             // Execute Query
-            BigQueryClient client = GoogleCloudUtility.GetBigQueryClient(projectId);
+            BigQueryClient client = GetBigQueryClient(projectId, credentialsJson);
 
             // Use Legacy SQL syntax?
             QueryOptions? queryOptions = null;

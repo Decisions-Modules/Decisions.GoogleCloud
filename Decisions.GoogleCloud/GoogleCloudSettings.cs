@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using DecisionsFramework;
-using DecisionsFramework.Data.DataTypes;
 using DecisionsFramework.Data.ORMapper;
 using DecisionsFramework.Design.Properties;
 using DecisionsFramework.ServiceLayer;
@@ -12,6 +11,7 @@ using DecisionsFramework.ServiceLayer.Services.Accounts;
 using DecisionsFramework.ServiceLayer.Services.Administration;
 using DecisionsFramework.ServiceLayer.Services.Folder;
 using DecisionsFramework.ServiceLayer.Utilities;
+using DecisionsFramework.Utilities;
 
 namespace Decisions.GoogleCloud
 {
@@ -33,10 +33,7 @@ namespace Decisions.GoogleCloud
 
         [ORMField] 
         private bool useJsonFile = true;
-        
-        [ORMField(typeof(ORMBinaryFieldConverter))]
-        private FileData credentialsJson;
-        
+
         [DataMember]
         [PropertyClassification(0, "Use JSON File", "Credentials")]
         public bool UseJsonFile
@@ -51,18 +48,14 @@ namespace Decisions.GoogleCloud
                 OnPropertyChanged(nameof(UseJsonFile));
             }
         }
-        
-        [DataMember]
+
+        [ORMField(typeof(ORMXmlSerializedFieldConverter))]
         [PropertyHiddenByValue(nameof(UseJsonFile), false, true)]
-        [PropertyClassification(1, "JSON File", "Credentials")]
-        public FileData CredentialsJson
+        [PropertyClassification(1, "Credentials", "Credentials")]
+        public CredentialsJson[] Credentials
         {
-            get { return credentialsJson; }
-            set
-            {
-                credentialsJson = value;
-                OnPropertyChanged(nameof(CredentialsJson));
-            }
+            get;
+            set;
         }
 
         public void Initialize()
@@ -82,13 +75,14 @@ namespace Decisions.GoogleCloud
                                    userAccount.GetUserRights<PortalAdministratorModuleRight>() != null ||
                                    userAccount.IsAdministrator();
 
-            if (canAdministrate)
-                return new BaseActionType[]
-                {
-                    new EditEntityAction(GetType(), "Edit", null),
-                };
+            BaseActionType[] actions = { };
 
-            return new BaseActionType[0];
+            if (canAdministrate)
+            {
+                actions.Add(new EditEntityAction(GetType(), "Edit", null));
+            }
+            
+            return actions;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -101,10 +95,9 @@ namespace Decisions.GoogleCloud
         {
             List<ValidationIssue> issues = new List<ValidationIssue>();
 
-            if (useJsonFile && CredentialsJson == null)
+            if (useJsonFile && Credentials == null)
             {
-                issues.Add(new ValidationIssue(nameof(CredentialsJson), "JSON Path cannot be empty."));
-
+                issues.Add(new ValidationIssue("At least one set of credentials must be specified."));
             }
 
             return issues.ToArray();
