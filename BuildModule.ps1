@@ -47,6 +47,11 @@ function FindMSBuild {
     if (Test-Path -PathType leaf -LiteralPath $guess ) {
         return $guess
     }
+	
+	$guess = Join-Path -Path ${Env:ProgramFiles(x86)} -ChildPath "Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\msbuild.exe"
+    if (Test-Path -PathType leaf -LiteralPath $guess ) {
+        return $guess
+    }
 }
 
 function GetCompileTarget($basePath) {
