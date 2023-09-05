@@ -13,6 +13,16 @@
 			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Auth.PlatformServices.dll</string>
 			<string>.\Decisions.GoogleCloud\obj\Google.Apis.Core.dll</string>
 			<string>.\Decisions.GoogleCloud\obj\Google.Apis.dll</string>
+		    <string>.\Decisions.GoogleCloud\obj\Google.Api.CommonProtos.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Api.Gax.Grpc.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Cloud.Iam.V1.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Cloud.Location.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.LongRunning.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Google.Protobuf.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Grpc.Auth.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Grpc.Core.Api.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Grpc.Net.Client.dll</string>
+			<string>.\Decisions.GoogleCloud\obj\Grpc.Net.Common.dll</string>
 		</ReferenceDlls>
 		<CliDlls/>
 		<WebPages/>
