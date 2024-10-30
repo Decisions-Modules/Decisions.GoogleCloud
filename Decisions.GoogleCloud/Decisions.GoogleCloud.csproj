@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <PropertyGroup>    
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>   
+    <RootNamespace>Decisions.GoogleCloud</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <RootPath>../</RootPath>  
+    <BuildDest>$(RootPath)obj</BuildDest>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Api.CommonProtos" Version="2.10.0" />
+    <PackageReference Include="Google.Api.Gax.Grpc" Version="4.4.0" />
+    <PackageReference Include="Google.Cloud.BigQuery.V2" Version="3.0.0" />
+    <PackageReference Include="Google.Cloud.Iam.V1" Version="3.0.0" />
+    <PackageReference Include="Google.Cloud.Location" Version="2.0.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.10.0" />
+    <PackageReference Include="Google.Cloud.Translate.V3" Version="3.3.0" />
+    <PackageReference Include="Google.LongRunning" Version="3.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="DecisionsSDK" Version="9.3.0" />
+    <PackageReference Include="Google.Apis.CloudIdentity.v1" Version="1.68.0.3570" />
+    <PackageReference Include="Google.Apis.Admin.Directory.directory_v1" Version="1.68.0.3554" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DecisionsFramework">
+      <HintPath>..\..\..\output\core\framework\DecisionsFramework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

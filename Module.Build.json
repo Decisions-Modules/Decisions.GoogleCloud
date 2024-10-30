@@ -1,0 +1,40 @@
+{
+	"Resources": {
+		"NoComponents": true,
+		"CoreServicesDlls": ["./Decisions.GoogleCloud/bin/Decisions.GoogleCloud.dll"],
+		"ReferenceDlls": [
+			"./Decisions.GoogleCloud/bin/Google.Cloud.BigQuery.V2.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.Bigquery.v2.dll",
+			"./Decisions.GoogleCloud/bin/Google.Api.Gax.dll",
+			"./Decisions.GoogleCloud/bin/Google.Api.Gax.Rest.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.Auth.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.Core.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.dll",
+			"./Decisions.GoogleCloud/bin/Google.Api.CommonProtos.dll",
+			"./Decisions.GoogleCloud/bin/Google.Api.Gax.Grpc.dll",
+			"./Decisions.GoogleCloud/bin/Google.Cloud.Iam.V1.dll",
+			"./Decisions.GoogleCloud/bin/Google.Cloud.Location.dll",
+			"./Decisions.GoogleCloud/bin/Google.LongRunning.dll",
+			"./Decisions.GoogleCloud/bin/Grpc.Auth.dll",
+			"./Decisions.GoogleCloud/bin/Google.Cloud.Translate.V3.dll",
+			"./Decisions.GoogleCloud/bin/Google.Cloud.Storage.V1.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.Storage.v1.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.Admin.Directory.directory_v1.dll",
+			"./Decisions.GoogleCloud/bin/Google.Apis.CloudIdentity.v1.dll"
+		],
+		"CliDlls": null,
+		"WebPages": null,
+		"SilverlightDlls": "",
+		"AgentDlls": null,
+		"InstallScript": "",
+		"SqlScripts": null,
+		"ObjectsToImport": "",
+		"MsSqlScript": null,
+		"CustomImages": [
+			"./icons/*.*"
+		]
+	},
+	"Version": "",
+	"ImagePath": "/Content/Images/Modules/modules_logo_google_cloud.png",
+	"Description": "Google Cloud is a suite of cloud computing services offered by Google. It provides a range of infrastructure and platform services, including computing power, storage, databases, machine learning, and networking. Google Cloud allows businesses to build, deploy, and scale applications and services on Google's infrastructure."
+}
