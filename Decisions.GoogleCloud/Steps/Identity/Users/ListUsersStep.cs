@@ -35,8 +35,7 @@ public class ListUsersStep : BaseCredentialsStep
     {
         string domain = data.Data[INPUT_DOMAIN] as string;
         string query = data.Data[INPUT_QUERY] as string;
-        int maxResults = 100;
-        Int32.TryParse(data.Data[INPUT_MAX_RESULTS] as string, out maxResults);
+        int maxResults = (int)data.Data[INPUT_MAX_RESULTS];
 
         CredentialsJson credentials = GoogleCloudUtility.GetCredentialsByName(Credentials);
         var users = ListUsers(credentials, domain, query, maxResults);
