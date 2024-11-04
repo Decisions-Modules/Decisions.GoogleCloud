@@ -39,7 +39,8 @@ public class InsertUserStep : BaseCredentialsStep
 
     public static GoogleCloudUser CreateUser(CredentialsJson credentials, GoogleCloudUser newUser)
     {
-        var client = GoogleCloudUtility.GetAdminDirectoryClient(credentials);
+        var client = GoogleCloudUtility.GetAdminDirectoryClient(credentials, 
+            new string[] { "https://www.googleapis.com/auth/admin.directory.user" });
         var resp = client.Users.Insert(newUser.ToUser()).Execute();
 
         return GoogleCloudUser.FromUser(resp);

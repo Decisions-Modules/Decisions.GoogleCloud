@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Decisions.GoogleCloud.Data.Users;
@@ -48,7 +47,8 @@ public class ListUsersStep : BaseCredentialsStep
     
     public static GoogleCloudUser[] ListUsers(CredentialsJson credentials, string domain, string query, int maxResults)
     {
-        var client = GoogleCloudUtility.GetAdminDirectoryClient(credentials);
+        var client = GoogleCloudUtility.GetAdminDirectoryClient(credentials, 
+            new string[] { "https://www.googleapis.com/auth/admin.directory.user" });
         var request = client.Users.List();
         request.Domain = domain;
         request.Query = query;

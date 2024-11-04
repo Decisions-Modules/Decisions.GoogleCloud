@@ -48,7 +48,7 @@ public class GoogleCloudGroup
         {
             Description = Description,
             DisplayName = DisplayName,
-            GroupKey = GroupKey.ToEntityKey(),
+            GroupKey = GroupKey?.ToEntityKey(),
             Name = Name,
             Parent = Parent,
             ETag = ETag

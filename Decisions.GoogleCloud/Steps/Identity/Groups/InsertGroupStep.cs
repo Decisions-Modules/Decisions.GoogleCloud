@@ -17,6 +17,8 @@ public class InsertGroupStep : BaseCredentialsStep
     public override DataDescription[] InputData =>
     [
         new DataDescription(new DecisionsNativeType(typeof(GoogleCloudGroup)), INPUT_GROUP_DATA, false, false, false),
+        new DataDescription(new DecisionsNativeType(typeof(string[])), INPUT_OVERRIDE_SCOPES, false, true, false),
+        new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_OVERRIDE_IMPERSONATE, false, true, false),
     ];
     
     public override OutcomeScenarioData[] OutcomeScenarios =>
@@ -27,9 +29,11 @@ public class InsertGroupStep : BaseCredentialsStep
     public override ResultData Run(StepStartData data)
     {
         GoogleCloudGroup newGroup = data[INPUT_GROUP_DATA] as GoogleCloudGroup;
+        string[] scopes = data.Data[INPUT_OVERRIDE_SCOPES] as string[];
+        string impersonate  = data.Data[INPUT_OVERRIDE_IMPERSONATE] as string;
+        
         CredentialsJson credentials = GoogleCloudUtility.GetCredentialsByName(Credentials);
-
-        var success = CreateGroup(credentials, newGroup);
+        var success = CreateGroup(credentials, newGroup, scopes, impersonate);
 
         return new ResultData(PATH_DONE, new Dictionary<string, object>()
         {
@@ -37,9 +41,9 @@ public class InsertGroupStep : BaseCredentialsStep
         });
     }
 
-    public static bool CreateGroup(CredentialsJson credentials, GoogleCloudGroup newGroup)
+    public static bool CreateGroup(CredentialsJson credentials, GoogleCloudGroup newGroup, string[] scopes = null, string impersonate = null)
     {
-        var client = GoogleCloudUtility.GetCloudIdentityService(credentials);
+        var client = GoogleCloudUtility.GetCloudIdentityService(credentials, scopes, impersonate);
         var resp = client.Groups.Create(newGroup.ToGroup()).Execute();
         return resp.Done ?? false;
     }

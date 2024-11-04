@@ -23,10 +23,10 @@ public class GoogleCloudUserName
     {
         return new GoogleCloudUserName()
         {
-            FamilyName = userName.FamilyName,
-            FullName = userName.FullName,
-            GivenName = userName.GivenName,
-            ETag = userName.ETag
+            FamilyName = userName?.FamilyName,
+            FullName = userName?.FullName,
+            GivenName = userName?.GivenName,
+            ETag = userName?.ETag
         };
     }
 

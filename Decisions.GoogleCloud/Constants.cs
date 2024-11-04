@@ -7,6 +7,7 @@ public static class Constants
     public const string STEP_CATEGORY_STORAGE = "Integration/Google Cloud/Storage";
     public const string STEP_CATEGORY_IDENTITY = "Integration/Google Cloud/Identity";
     public const string STEP_CATEGORY_ADMIN = "Integration/Google Cloud/Admin";
+    public const string STEP_CATEGORY_DOCUMENT_AI = "Integration/Google Cloud/DocumentAI";
     internal const string STEP_ICON_BIG_QUERY = "CustomModuleImages/Decisions.GoogleCloud/bigquery.svg";
     internal const string STEP_ICON_TRANSLATION = "CustomModuleImages/Decisions.GoogleCloud/cloud_translation_api.svg";
     internal const string GCP_STEP_COLOR = "#FFC000";

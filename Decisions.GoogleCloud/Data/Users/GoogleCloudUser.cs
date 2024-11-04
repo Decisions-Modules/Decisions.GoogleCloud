@@ -108,7 +108,7 @@ public class GoogleCloudUser
         return new GoogleCloudUser() 
         {
 	        Id = user.Id,
-	        Name = GoogleCloudUserName.FromUserName(user.Name),
+	        Name = GoogleCloudUserName.FromUserName(user?.Name),
 	        ETag = user.ETag,
 	        CustomerId = user.CustomerId,
 	        Kind = user.Kind,
@@ -118,7 +118,7 @@ public class GoogleCloudUser
 	        OrgUnitPath = user.OrgUnitPath,
 	        HashFunction = user.HashFunction,
 	        Aliases = user.Aliases.ToArray(),
-	        NonEditableAliases = user.NonEditableAliases.ToArray(),
+	        NonEditableAliases = user.NonEditableAliases?.ToArray(),
 	        ThumbnailPhotoEtag = user.ThumbnailPhotoEtag,
 	        ThumbnailPhotoUrl = user.ThumbnailPhotoUrl,
 	        AgreedToTerms = user.AgreedToTerms,
@@ -133,9 +133,9 @@ public class GoogleCloudUser
 	        IsMailboxSetup = user.IsMailboxSetup,
 	        Suspended = user.Suspended,
 	        SuspensionReason = user.SuspensionReason,
-	        Addresses = user.Addresses.Select(GoogleCloudUserAddress.FromUserAddress).ToArray(),
-	        Emails = user.Emails.Select(GoogleCloudUserEmail.FromUserEmail).ToArray(),
-	        Phones = user.Phones.Select(GoogleCloudUserPhone.FromUserPhone).ToArray(),
+	        Addresses = user.Addresses?.Select(GoogleCloudUserAddress.FromUserAddress).ToArray(),
+	        Emails = user.Emails?.Select(GoogleCloudUserEmail.FromUserEmail).ToArray(),
+	        Phones = user.Phones?.Select(GoogleCloudUserPhone.FromUserPhone).ToArray(),
         };
     }
 
@@ -144,7 +144,7 @@ public class GoogleCloudUser
         return new User()
         {
 	        Id = Id,
-	        Name = Name.ToUserName(),
+	        Name = Name?.ToUserName(),
 	        ETag = ETag,
 	        CustomerId = CustomerId,
 	        Kind = Kind,
@@ -170,9 +170,9 @@ public class GoogleCloudUser
 	        IsMailboxSetup = IsMailboxSetup,
 	        Suspended = Suspended,
 	        SuspensionReason = SuspensionReason,
-	        Addresses = Addresses.Select(m => m.ToUserAddress()).ToArray(),
-	        Emails = Emails.Select(m => m.ToUserEmail()).ToArray(),
-	        Phones = Phones.Select(m => m.ToUserPhone()).ToArray(),
+	        Addresses = Addresses?.Select(m => m.ToUserAddress()).ToArray(),
+	        Emails = Emails?.Select(m => m.ToUserEmail()).ToArray(),
+	        Phones = Phones?.Select(m => m.ToUserPhone()).ToArray(),
         };
     }
 }

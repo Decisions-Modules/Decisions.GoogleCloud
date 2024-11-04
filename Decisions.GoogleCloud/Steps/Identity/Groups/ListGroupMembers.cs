@@ -5,6 +5,8 @@ using Decisions.GoogleCloud.Data.Users;
 using DecisionsFramework.Design.ConfigurationStorage.Attributes;
 using DecisionsFramework.Design.Flow;
 using DecisionsFramework.Design.Flow.Mapping;
+using Google.Apis.Admin.Directory.directory_v1;
+using Google.Apis.Admin.Directory.directory_v1.Data;
 
 namespace Decisions.GoogleCloud.Steps.Identity.Groups;
 
@@ -13,12 +15,16 @@ namespace Decisions.GoogleCloud.Steps.Identity.Groups;
 public class ListGroupMembers : BaseCredentialsStep
 {
     private const string INPUT_GROUP_KEY = "Group Key";
+    private const string INPUT_DOMAIN = "Domain";
+    private const string INPUT_MAX_RESULTS = "Max Results";
     private const string OUTPUT_MEMBERS = "Members";
     private const string PATH_DONE = "Done";
     
     public override DataDescription[] InputData =>
     [
+        new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_DOMAIN, false, false, false),
         new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_GROUP_KEY, false, false, false),
+        new DataDescription(new DecisionsNativeType(typeof(int)), INPUT_MAX_RESULTS, false, false, false),
     ];
     
     public override OutcomeScenarioData[] OutcomeScenarios =>
@@ -29,39 +35,31 @@ public class ListGroupMembers : BaseCredentialsStep
     public override ResultData Run(StepStartData data)
     {
         string groupKey = data[INPUT_GROUP_KEY] as string;
+        string domain = data[INPUT_DOMAIN] as string;
+        int maxResults = (int)data[INPUT_MAX_RESULTS];
         CredentialsJson credentials = GoogleCloudUtility.GetCredentialsByName(Credentials);
         
-        var members = ListMembers(credentials, groupKey);
+        var members = ListMembers(credentials, domain, groupKey, maxResults);
         return new ResultData(PATH_DONE, new Dictionary<string, object>()
         {
             {OUTPUT_MEMBERS, members}
         });
     }
 
-    public static GoogleCloudMembership[] ListMembers(CredentialsJson credentials, string groupKey)
+    public static GoogleCloudMember[] ListMembers(CredentialsJson credentials, string domain, string groupKey, int maxResults)
     {
-        var client = GoogleCloudUtility.GetCloudIdentityService(credentials);
+        DirectoryService client = GoogleCloudUtility.GetAdminDirectoryClient(credentials);
+        var request = client.Groups.List();
+        request.Domain = domain;
+        request.MaxResults = maxResults;
 
-        var members = new List<GoogleCloudMembership>();
-        var groupResourceId = $"groups/{groupKey}";
-        string pageToken = null;
-
-        do
-        {
-            var request = client.Groups.Memberships.List(groupResourceId);
-            request.PageToken = pageToken;
-            request.PageSize = 100;
-
-            var response = request.Execute();
-            if (response.Memberships != null)
-            {
-                members.AddRange(response.Memberships.Select(GoogleCloudMembership.FromMembership));
-            }
-
-            pageToken = response.NextPageToken;
-        } while (pageToken != null);
-
-        return members.ToArray();
+        var groups = request.Execute();
+        var targetGroup = groups.GroupsValue.FirstOrDefault(m => m.Id == groupKey);
+        if (targetGroup == null)
+            return [];
+        
+        var membersRequest = client.Members.List(targetGroup.Id);
+        Members members = membersRequest.Execute();
+        return members.MembersValue.Select(GoogleCloudMember.FromMember).ToArray();
     }
-    
 }

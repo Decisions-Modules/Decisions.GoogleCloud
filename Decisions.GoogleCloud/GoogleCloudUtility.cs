@@ -13,7 +13,10 @@ using Google.Apis.CloudIdentity.v1;
 using Google.Apis.Http;
 using Google.Apis.Services;
 using Google.Cloud.BigQuery.V2;
+using Google.Cloud.DocumentAI.V1;
 using Google.Cloud.Storage.V1;
+using Grpc.Auth;
+using Grpc.Core;
 
 namespace Decisions.GoogleCloud;
 
@@ -83,7 +86,7 @@ public static class GoogleCloudUtility
     /// <summary>
     /// Creates a client for use with the Identity API for Group management
     /// </summary>
-    public static CloudIdentityService GetCloudIdentityService(CredentialsJson credentialsJson)
+    public static CloudIdentityService GetCloudIdentityService(CredentialsJson credentialsJson, string[]? scopes = null, string? impersonate = null)
     {
         GoogleCredential credentials = GetGoogleCredentials(credentialsJson);
         return credentials != null
@@ -101,9 +104,9 @@ public static class GoogleCloudUtility
     /// <summary>
     ///  Creates a client for use with the Admin API for User management
     /// </summary>
-    public static DirectoryService GetAdminDirectoryClient(CredentialsJson credentialsJson)
+    public static DirectoryService GetAdminDirectoryClient(CredentialsJson credentialsJson, string[]? scopes = null, string? impersonate = null)
     {
-        GoogleCredential credentials = GetGoogleCredentials(credentialsJson);
+        GoogleCredential credentials = GetGoogleCredentials(credentialsJson, scopes);
         return credentials != null
             ? new DirectoryService(new BaseClientService.Initializer
             {
@@ -114,6 +117,18 @@ public static class GoogleCloudUtility
             {
                 ApplicationName = "Decisions.GoogleCloud",
             });
+    }
+
+    public static DocumentProcessorServiceClient GetDocumentProcessorClient(CredentialsJson credentialsJson, string locationId)
+    {
+        GoogleCredential credentials = GetGoogleCredentials(credentialsJson);
+        ChannelCredentials channelCredentials = credentials.ToChannelCredentials();
+        return new DocumentProcessorServiceClientBuilder
+        {
+            ChannelCredentials = channelCredentials,
+            Endpoint = $"{locationId}-documentai.googleapis.com",
+        }.Build();
+
     }
     
     /// <summary>
@@ -129,7 +144,7 @@ public static class GoogleCloudUtility
     /// <summary>
     /// Creates GoogleCredentials based on Decisions GoogleCloud Credentials object.
     /// </summary>
-    private static GoogleCredential? GetGoogleCredentials(CredentialsJson credentialsJson)
+    private static GoogleCredential? GetGoogleCredentials(CredentialsJson credentialsJson, string[]? scopes = null, string? impersonate = null)
     {
         GoogleCloudSettings settings = ModuleSettingsAccessor<GoogleCloudSettings>.GetSettings();
         if (!settings.UseJsonFile)
@@ -147,8 +162,15 @@ public static class GoogleCloudUtility
         }
         GoogleCredential credential = GoogleCredential.FromJson(contents);
         credential.CreateWithHttpClientFactory(new HttpClientFactory());
-        return credential;
+        if (scopes is { Length: > 0 })
+            credential.CreateScoped(scopes);
+        else
+            credential.CreateScoped(DocumentProcessorServiceClient.DefaultScopes);
 
+        if (!string.IsNullOrEmpty(impersonate))
+            credential.CreateWithUser(impersonate);
+            
+        return credential;
     }
     
     #endregion

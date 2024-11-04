@@ -12,7 +12,12 @@ namespace Decisions.GoogleCloud.Steps;
 
 public abstract class BaseCredentialsStep : ISyncStep, IDataConsumer, INotifyPropertyChanged
 {
+    public const string INPUT_OVERRIDE_SCOPES = "Override Scopes";
+    public const string INPUT_OVERRIDE_IMPERSONATE = "Impersonate User";
+    
     private string credentials;
+    private string[] additionalScopes;
+    private string impersonateAs;
         
     [WritableValue]
     [SelectStringEditor(nameof(CredentialsNames))]

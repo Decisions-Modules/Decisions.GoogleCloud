@@ -3,6 +3,8 @@ using Decisions.GoogleCloud.Data.Groups;
 using DecisionsFramework.Design.ConfigurationStorage.Attributes;
 using DecisionsFramework.Design.Flow;
 using DecisionsFramework.Design.Flow.Mapping;
+using Google.Apis.CloudIdentity.v1;
+using Google.Apis.CloudIdentity.v1.Data;
 
 namespace Decisions.GoogleCloud.Steps.Identity.Groups;
 
@@ -19,6 +21,8 @@ public class GetGroupUserDetailsStep : BaseCredentialsStep
     [
         new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_USER_KEY, false, false, false),
         new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_GROUP_KEY, false, false, false),
+        new DataDescription(new DecisionsNativeType(typeof(string[])), INPUT_OVERRIDE_SCOPES, false, true, false),
+        new DataDescription(new DecisionsNativeType(typeof(string)), INPUT_OVERRIDE_IMPERSONATE, false, true, false),
     ];
     
     public override OutcomeScenarioData[] OutcomeScenarios =>
@@ -30,29 +34,30 @@ public class GetGroupUserDetailsStep : BaseCredentialsStep
     {
         string userKey = data.Data[INPUT_USER_KEY] as string;
         string groupKey = data.Data[INPUT_GROUP_KEY] as string;
+        string[] scopes = data.Data[INPUT_OVERRIDE_SCOPES] as string[];
+        string impersonate  = data.Data[INPUT_OVERRIDE_IMPERSONATE] as string;
         
         CredentialsJson credentials = GoogleCloudUtility.GetCredentialsByName(Credentials);
         
-        var membership = GetGroupUserDetails(credentials, userKey, groupKey);
+        var membership = GetGroupUserDetails(credentials, userKey, groupKey, scopes, impersonate);
         return new ResultData(PATH_DONE, new Dictionary<string, object>()
         {
             {OUTPUT_MEMBERSHIP, membership}
         });
     }
 
-    public static GoogleCloudMembership GetGroupUserDetails(CredentialsJson credentials, string userKey, string groupKey)
+    public static GoogleCloudMembership GetGroupUserDetails(CredentialsJson credentials, string userKey, string groupKey, string[] scopes = null, string impersonate = null)
     {
-        var client = GoogleCloudUtility.GetCloudIdentityService(credentials);
-        var groupResourceName = $"groups/{groupKey}";
+        CloudIdentityService client = GoogleCloudUtility.GetCloudIdentityService(credentials, scopes, impersonate);
+        string groupResourceName = $"groups/{groupKey}";
 
         var lookupRequest = client.Groups.Memberships.Lookup(groupResourceName);
         lookupRequest.MemberKeyId = userKey;
         lookupRequest.MemberKeyNamespace = "identitysources";
         
         var lookupResponse = lookupRequest.Execute();
-
-        var membershipName = lookupResponse.Name;
-        var getRequest = client.Groups.Memberships.Get(membershipName).Execute();
+        string membershipName = lookupResponse.Name;
+        Membership getRequest = client.Groups.Memberships.Get(membershipName).Execute();
         
         return GoogleCloudMembership.FromMembership(getRequest);
     }
