@@ -34,7 +34,7 @@
 			"./icons/*.*"
 		]
 	},
-	"Version": "",
+	"Version": "10.0.0",
 	"ImagePath": "/Content/Images/Modules/modules_logo_google_cloud.png",
 	"Description": "Google Cloud is a suite of cloud computing services offered by Google. It provides a range of infrastructure and platform services, including computing power, storage, databases, machine learning, and networking. Google Cloud allows businesses to build, deploy, and scale applications and services on Google's infrastructure."
 }
